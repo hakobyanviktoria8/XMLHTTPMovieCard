@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table,td{
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+        td{
+            width: 200px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>new XMLHttpRequest()</h1>
+<table id="itemPlace"></table>
+<script>
+    let xhr = new XMLHttpRequest();
+    // url = "https://itunes.apple.com/search?term=harry-potter&entity=movie";
+    // url = "https://itunes.apple.com/search?term=rihanna&entity=album";
+    // url = "https://itunes.apple.com/search?term=love&entity=song";
+    // url = "https://itunes.apple.com/search?term=beatles&entity=song";
+    // url = "https://itunes.apple.com/search?term=code&entity=podcast";
+    url = "https://itunes.apple.com/search?term=book&entity=podcast";
+    xhr.open("GET", url, true);
+    xhr.send();
+    xhr.onload = function(){
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            let response = xhr.responseText;             //console.log(response);
+            let resultJSON = JSON.parse(response);       //console.log(resultJSON);
+            let items = resultJSON.results;            console.log(items);
+            for (let item of items) {
+                itemPlace.innerHTML +=
+                    `
+                        <tr>
+                            <td><img src="${item.artworkUrl100}" alt=""></td>
+                            <td>${item.artistName}</td>
+                            <td>${item.collectionName}</td>
+                            <td><a href="${item.collectionViewUrl}">Click</a></td>
+                            <td>${item.country}</td>
+                            <td>${item.releaseDate.slice(0,10)}</td>
+                            <td>${item.genres}</td>
+                        </tr>
+                    `
+            }
+        }
+    };
+    xhr.onerror = function() {
+        alert(`Network Error`);
+    };
+    // xhr.onprogress = function(event) {
+    //     alert(`Received ${event.loaded} of ${event.total}`);
+    // };
+
+</script>
+</body>
+</html>
